@@ -1,5 +1,5 @@
 <template>
-  <div class="game">
+  <div class="game" :style="'transform: scale(' + gamescale + ')'">
     <h1>game</h1>
     <div class="background"></div>
     <div class="dialog-name">{{ name }}</div>
@@ -8,9 +8,21 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 const name = ref("");
 const text = ref("");
+const gamescale = ref(1);
+onMounted(() => {
+  window.onresize = function (e) {
+    var ratio = e.target.innerWidth / e.target.innerHeight;
+    if (ratio > 16 / 9) {
+      var scale = e.target.innerHeight / 720;
+    } else {
+      var scale = e.target.innerWidth / 1280;
+    }
+    gamescale.value = scale;
+  };
+});
 import("../assets/demogame.story").then(({ default: data }) => {
   console.log(data);
   name.value = "name";
@@ -23,7 +35,7 @@ import("../assets/demogame.story").then(({ default: data }) => {
   position: absolute;
   width: 1280px;
   height: 720px;
-  border: 1px solid;
+  transform-origin: top left;
   font-size: 24px;
   --c-line: #f6bd60;
   --c-background: #f7ede2;
