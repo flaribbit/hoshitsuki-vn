@@ -4,7 +4,7 @@ const regexLine = /^(\w+) (.+)/;
 
 function compileFileToJS(src) {
   var res = "export default [";
-  var lines = src.split("\n");
+  var lines = src.split(/\r?\n/);
   for (var line of lines) {
     if (line == "") continue;
     var r = regexLine.exec(line);
