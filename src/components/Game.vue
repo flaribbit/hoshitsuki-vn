@@ -34,10 +34,11 @@ watchEffect(() => {
   if (!command) return;
   switch (command[0]) {
     case "text":
-      var splits = command[1].split(/: ?/);
-      if (splits.length == 2) {
-        name.value = splits[0];
-        text.value = splits[1];
+      console.log(index.value, command);
+      var res = command[1].match(/(.+?): ?(.+)/);
+      if (res) {
+        name.value = res[1];
+        text.value = res[2];
       } else {
         name.value = null;
         text.value = command[1];
