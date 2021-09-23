@@ -1,5 +1,5 @@
 <template>
-  <div class="game" :style="'transform: scale(' + gamescale + ')'">
+  <div class="game" :style="gameStyle">
     <h1>game</h1>
     <div class="background"></div>
     <div class="dialog-name">{{ name }}</div>
@@ -8,19 +8,24 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 const name = ref("");
 const text = ref("");
-const gamescale = ref(1);
+const windowSize = reactive({ w: window.innerWidth, h: window.innerHeight });
+const gameStyle = computed(() => {
+  var ratio = windowSize.w / windowSize.h;
+  if (ratio > 16 / 9) {
+    var scale = windowSize.h / 720;
+    return `transform: scale(${scale}) translate(${(windowSize.w - 1280 * scale) >> 1}px, 0)`;
+  } else {
+    var scale = windowSize.w / 1280;
+    return `transform: scale(${scale}) translate(0, ${(windowSize.h - 720 * scale) >> 1}px)`;
+  }
+});
 onMounted(() => {
-  window.onresize = function (e) {
-    var ratio = e.target.innerWidth / e.target.innerHeight;
-    if (ratio > 16 / 9) {
-      var scale = e.target.innerHeight / 720;
-    } else {
-      var scale = e.target.innerWidth / 1280;
-    }
-    gamescale.value = scale;
+  window.onresize = function () {
+    windowSize.w = window.innerWidth;
+    windowSize.h = window.innerHeight;
   };
 });
 import("../assets/demogame.story").then(({ default: data }) => {
