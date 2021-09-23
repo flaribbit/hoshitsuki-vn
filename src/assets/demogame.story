@@ -4,6 +4,7 @@ Aliquam commodo, leo a gravida pellentesque, augue erat molestie turpis, quis su
 Quisque viverra augue quis placerat pulvinar.
 scene morning
 text rin: Good morning!
+text sora: Good morning!
 label restart
 set happiness 0
 add happiness 1

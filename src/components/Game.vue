@@ -1,16 +1,23 @@
 <template>
-  <div class="game" :style="gameStyle">
+  <div class="game" :style="gameStyle" @click="index++">
     <h1>game</h1>
-    <div class="background"></div>
-    <div class="dialog-name">{{ name }}</div>
+    <div
+      class="background"
+      :style="`background: url(${background}) no-repeat center; background-size: cover;`"
+    >{{ index }}, {{ commandlist[index] }}</div>
+    <div class="dialog-name" v-if="name">{{ name }}</div>
     <div class="dialog-box">{{ text }}</div>
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref, watchEffect } from "vue";
 const name = ref("");
 const text = ref("");
+const background = ref("backgrounds/道02.png");
+const index = ref(0);
+const commandlist = ref([]);
+const vars = reactive({});
 const windowSize = reactive({ w: window.innerWidth, h: window.innerHeight });
 const gameStyle = computed(() => {
   var ratio = windowSize.w / windowSize.h;
@@ -22,6 +29,43 @@ const gameStyle = computed(() => {
     return `transform: translate(0, ${(windowSize.h - 720 * scale) / 2}px) scale(${scale})`;
   }
 });
+watchEffect(() => {
+  var command = commandlist.value[index.value];
+  if (!command) return;
+  switch (command[0]) {
+    case "text":
+      var splits = command[1].split(/: ?/);
+      if (splits.length == 2) {
+        name.value = splits[0];
+        text.value = splits[1];
+      } else {
+        name.value = null;
+        text.value = command[1];
+      }
+      break;
+    case "scene"://TODO
+      index.value++;
+      break;
+    case "label"://TODO
+      index.value++;
+      break;
+    case "goto":
+      index.value = command[1];
+      break;
+    case "set":
+      var res = command[1].match(/(\S+) (.+)/);
+      vars[res[0]] = parseFloat(res[1]);
+      break;
+    case "add":
+      var res = command[1].match(/(\S+) (.+)/);
+      vars[res[0]] += parseFloat(res[1]);
+      break;
+    case "bgm":
+      break;
+    case "bg":
+      break;
+  }
+});
 onMounted(() => {
   window.onresize = function () {
     windowSize.w = window.innerWidth;
@@ -29,9 +73,7 @@ onMounted(() => {
   };
 });
 import("../assets/demogame.story").then(({ default: data }) => {
-  console.log(data);
-  name.value = "name";
-  text.value = data[0][1];
+  commandlist.value = data;
 });
 </script>
 
@@ -47,8 +89,6 @@ import("../assets/demogame.story").then(({ default: data }) => {
 }
 .background {
   position: absolute;
-  background: url(backgrounds/道02.png) no-repeat center;
-  background-size: cover;
   image-rendering: pixelated;
   top: 0;
   left: 0;
