@@ -47,7 +47,7 @@ import("../assets/demogame.story").then(({ default: data }) => {
 }
 .background {
   position: absolute;
-  background: url(../assets/backgrounds/道02.png) no-repeat center;
+  background: url(backgrounds/道02.png) no-repeat center;
   background-size: cover;
   image-rendering: pixelated;
   top: 0;
