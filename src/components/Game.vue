@@ -16,10 +16,10 @@ const gameStyle = computed(() => {
   var ratio = windowSize.w / windowSize.h;
   if (ratio > 16 / 9) {
     var scale = windowSize.h / 720;
-    return `transform: scale(${scale}) translate(${(windowSize.w - 1280 * scale) >> 1}px, 0)`;
+    return `transform: translate(${(windowSize.w - 1280 * scale) / 2}px, 0) scale(${scale})`;
   } else {
     var scale = windowSize.w / 1280;
-    return `transform: scale(${scale}) translate(0, ${(windowSize.h - 720 * scale) >> 1}px)`;
+    return `transform: translate(0, ${(windowSize.h - 720 * scale) / 2}px) scale(${scale})`;
   }
 });
 onMounted(() => {
