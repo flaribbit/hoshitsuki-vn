@@ -1,5 +1,5 @@
 <template>
-  <div class="game" :style="gameStyle" @click="index++">
+  <div class="game" :style="gameStyle" @click="index++; update();">
     <h1>game</h1>
     <div
       class="background"
@@ -29,52 +29,60 @@ const gameStyle = computed(() => {
     return `transform: translate(0, ${(windowSize.h - 720 * scale) / 2}px) scale(${scale})`;
   }
 });
-watchEffect(() => {
-  var command = commandlist.value[index.value];
-  if (!command) return;
-  switch (command[0]) {
-    case "text":
-      console.log(index.value, command);
-      var res = command[1].match(/(.+?): ?(.+)/);
-      if (res) {
-        name.value = res[1];
-        text.value = res[2];
-      } else {
-        name.value = null;
-        text.value = command[1];
-      }
-      break;
-    case "scene"://TODO
-      index.value++;
-      break;
-    case "label"://TODO
-      index.value++;
-      break;
-    case "goto":
-      index.value = command[1];
-      break;
-    case "set":
-      var res = command[1].match(/(\S+) (.+)/);
-      vars[res[0]] = parseFloat(res[1]);
-      break;
-    case "add":
-      var res = command[1].match(/(\S+) (.+)/);
-      vars[res[0]] += parseFloat(res[1]);
-      break;
-    case "bgm":
-      break;
-    case "bg":
-      break;
+function update() {
+  console.log("update call", index.value);
+  while (true) {
+    var command = commandlist.value[index.value];
+    if (!command) return;
+    console.log(index.value, command);
+    switch (command[0]) {
+      case "text":
+        var res = command[1].match(/(.+?): ?(.+)/);
+        if (res) {
+          name.value = res[1];
+          text.value = res[2];
+        } else {
+          name.value = null;
+          text.value = command[1];
+        }
+        return;
+      case "scene"://TODO
+        index.value++;
+        continue;
+      case "label"://TODO
+        index.value++;
+        continue;
+      case "goto":
+        index.value = command[1];
+        continue;
+      case "set":
+        var res = command[1].match(/(\S+) (.+)/);
+        vars[res[0]] = parseFloat(res[1]);
+        index.value++;
+        continue;
+      case "add":
+        var res = command[1].match(/(\S+) (.+)/);
+        vars[res[0]] += parseFloat(res[1]);
+        index.value++;
+        continue;
+      case "bgm":
+        index.value++;
+        continue;
+      case "bg":
+        index.value++;
+        continue;
+    }
   }
-});
+}
 onMounted(() => {
   window.onresize = function () {
     windowSize.w = window.innerWidth;
     windowSize.h = window.innerHeight;
   };
-});
-import("../assets/demogame.story").then(({ default: data }) => {
-  commandlist.value = data;
+  import("../assets/demogame.story").then(({ default: data }) => {
+    commandlist.value = data;
+    update();
+  });
 });
 </script>
 
