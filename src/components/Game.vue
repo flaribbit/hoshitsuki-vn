@@ -5,6 +5,7 @@
       class="background"
       :style="`background: url(${background}) no-repeat center; background-size: cover;`"
     >{{ index }}, {{ commandlist[index] }}</div>
+    <div class="character1"></div>
     <div class="dialog-name" v-if="name">{{ name }}</div>
     <div class="dialog-box">{{ text }}</div>
   </div>
@@ -89,9 +90,10 @@ onMounted(() => {
 <style>
 .game {
   position: absolute;
+  overflow: hidden;
   width: 1280px;
   height: 720px;
-  transform-origin: top left;
+  transform-origin: 0 0;
   font-size: 24px;
   --c-line: #f6bd60;
   --c-background: #f7ede2;
@@ -103,6 +105,16 @@ onMounted(() => {
   left: 0;
   width: 100%;
   height: 100%;
+}
+.character1 {
+  position: absolute;
+  left: 450px;
+  top: 200px;
+  width: 470px;
+  height: 730px;
+  transform: scale(0.8);
+  transform-origin: 0 0;
+  background: url(characters/039_00.png);
 }
 .dialog-name {
   position: absolute;
