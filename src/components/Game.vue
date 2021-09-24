@@ -5,7 +5,7 @@
       class="background"
       :style="`background: url(${background}) no-repeat center; background-size: cover;`"
     >{{ index }}, {{ commandlist[index] }}</div>
-    <div class="character1"></div>
+    <Character name="039_00.png" s="0.8" />
     <div class="dialog-name" v-if="name">{{ name }}</div>
     <div class="dialog-box">{{ text }}</div>
   </div>
@@ -13,6 +13,7 @@
 
 <script setup>
 import { computed, onMounted, reactive, ref, watchEffect } from "vue";
+import Character from "./Character.vue";
 const name = ref("");
 const text = ref("");
 const background = ref("backgrounds/道02.png");
@@ -105,16 +106,6 @@ onMounted(() => {
   left: 0;
   width: 100%;
   height: 100%;
-}
-.character1 {
-  position: absolute;
-  left: 450px;
-  top: 200px;
-  width: 470px;
-  height: 730px;
-  transform: scale(0.8);
-  transform-origin: 0 0;
-  background: url(characters/039_00.png);
 }
 .dialog-name {
   position: absolute;
