@@ -3,19 +3,18 @@ const regexFile = /\.story$/;
 const regexLine = /^(\w+) (.+)/;
 
 function compileFileToJS(src) {
-  var res = "export default [";
   var lines = src.split(/\r?\n/);
+  var cmds = [];
   for (var line of lines) {
     if (line == "") continue;
     var r = regexLine.exec(line);
     if (r && commands.indexOf(r[1]) != -1) {
-      res += `["${r[1]}","${r[2]}"],`;
+      cmds.push([r[1], r[2]]);
     } else {
-      res += `["text","${line}"],`; //省略指令时默认text
+      cmds.push(["text", line]); //省略指令时默认text
     }
   }
-  res += "]";
-  return res;
+  return "export default " + JSON.stringify(cmds);
 }
 
 export default function story() {
