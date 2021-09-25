@@ -1,4 +1,4 @@
-const commands = ["scene", "text", "label", "set", "add", "goto", "bgm"];
+const commands = ["scene", "text", "label", "set", "add", "goto", "bgm", "select"];
 const regexFile = /\.story$/;
 const regexLine = /^(\w+) (.+)/;
 const regexGoto = /^(\S+) (if|unless) ([^<>=!]+) ?([<>=!]+) ?(.+)/;

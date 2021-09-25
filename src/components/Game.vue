@@ -52,20 +52,38 @@ function update() {
       case "scene"://TODO
         index.value++;
         continue;
-      case "label"://TODO
+      case "label":
         index.value++;
         continue;
       case "goto":
-        index.value = command[1];
+        if (command.length == 6) {
+          let v1 = vars[command[3]];
+          let v2 = command[5];
+          let result;
+          switch (command[4]) {
+            case "<": result = v1 < v2; break;
+            case ">": result = v1 > v2; break;
+            case "<=": result = v1 <= v2; break;
+            case ">=": result = v1 >= v2; break;
+            case "==": result = v1 == v2; break;
+            case "!=": result = v1 != v2; break;
+          }
+          if (command[2] == "unless") result = !result;
+          if (result) {
+            index.value = command[1];
+          } else {
+            index.value += 1;
+          }
+        } else {
+          index.value = command[1];
+        }
         continue;
       case "set":
-        var res = command[1].match(/(\S+) (.+)/);
-        vars[res[0]] = parseFloat(res[1]);
+        vars[command[1]] = command[2];
         index.value++;
         continue;
       case "add":
-        var res = command[1].match(/(\S+) (.+)/);
-        vars[res[0]] += parseFloat(res[1]);
+        vars[command[1]] += command[2];
         index.value++;
         continue;
       case "bgm":
