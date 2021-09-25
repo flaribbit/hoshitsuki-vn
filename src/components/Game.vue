@@ -4,7 +4,10 @@
     <div
       class="background"
       :style="`background: url(${background}) no-repeat center; background-size: cover;`"
-    >{{ index }}, {{ commandlist[index] }}</div>
+    >
+      <p>command: {{ index }}, {{ commandlist[index] }}</p>
+      <p>variables: {{ vars }}</p>
+    </div>
     <Character name="039_00.png" s="0.8" x="200" />
     <Character name="038_00.png" s="0.8" x="600" />
     <div class="dialog-name" v-if="name">{{ name }}</div>
