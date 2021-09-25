@@ -4,8 +4,8 @@ Nulla vehicula, neque vitae maximus egestas, dui justo venenatis augue, ut rhonc
 Aliquam commodo, leo a gravida pellentesque, augue erat molestie turpis, quis suscipit justo nulla vitae dui.
 Quisque viverra augue quis placerat pulvinar.
 scene morning
-text rin: Good morning!
-text sora: Good morning!
+text Cirno: Good morning!
+text Daiyousei: Good morning!
 set happiness 0
 add happiness 1
 goto start

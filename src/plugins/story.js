@@ -1,6 +1,8 @@
 const commands = ["scene", "text", "label", "set", "add", "goto", "bgm"];
 const regexFile = /\.story$/;
 const regexLine = /^(\w+) (.+)/;
+const regexGoto = /^(\S+) (if|unless) ([^<>=!]+) ?([<>=!]+) ?(.+)/;
+const regexSet = /^(\S+) (.+)/;
 
 function compileFileToJS(src) {
   var lines = src.split(/\r?\n/);
@@ -13,7 +15,21 @@ function compileFileToJS(src) {
     if (r && r[1] == "label") {
       labels[r[2]] = index;
     } else if (r && commands.indexOf(r[1]) != -1) {
-      cmds.push([r[1], r[2]]);
+      if (r[1] == "goto") {
+        var s = r[2];
+        r = regexGoto.exec(s);
+        if (r) {
+          cmds.push(["goto", r[1], r[2], r[3], r[4], parseFloat(r[5])]);
+        } else {
+          cmds.push(["goto", s]);
+        }
+      } else if (r[1] == "set" || r[1] == "add") {
+        var s = r[1];
+        r = regexSet.exec(r[2]);
+        cmds.push([s, r[1], parseFloat(r[2])]);
+      } else {
+        cmds.push([r[1], r[2]]);
+      }
       index++;
     } else {
       cmds.push(["text", line]); //省略指令时默认text
@@ -25,6 +41,7 @@ function compileFileToJS(src) {
       cmd[1] = labels[cmd[1]];
     }
   }
+  console.log(cmds);
   return "export default " + JSON.stringify(cmds);
 }
 
