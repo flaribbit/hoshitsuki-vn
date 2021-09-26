@@ -1,6 +1,6 @@
 <template>
   <div class="choice">
-    <div class="item" v-for="item in items" @click="emit('goto', item.goto)">{{ item.text }}</div>
+    <div class="item" v-for="item in items" @click.stop="emit('goto', item.goto)">{{ item.text }}</div>
   </div>
 </template>
 
@@ -29,5 +29,6 @@ const items = ref([
   margin-bottom: 1em;
   padding: 0.5em;
   text-align: center;
+  cursor: pointer;
 }
 </style>
