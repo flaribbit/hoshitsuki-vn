@@ -12,12 +12,14 @@
     <Character name="038_00.png" s="0.8" x="600" />
     <div class="dialog-name" v-if="name">{{ name }}</div>
     <div class="dialog-box">{{ text }}</div>
+    <Choice @goto="onGoto" />
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, reactive, ref, watchEffect } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 import Character from "./Character.vue";
+import Choice from "./Choice.vue";
 const name = ref("");
 const text = ref("");
 const background = ref("backgrounds/道02.png");
@@ -35,7 +37,12 @@ const gameStyle = computed(() => {
     return `transform: translate(0, ${(windowSize.h - 720 * scale) / 2}px) scale(${scale})`;
   }
 });
-function update() {
+const onGoto = i => {
+  console.log(i);
+  index.value = i;
+  update();
+}
+const update = () => {
   console.log("update call", index.value);
   while (true) {
     var command = commandlist.value[index.value];
