@@ -1,18 +1,19 @@
 <template>
   <div class="choice">
-    <div class="item" v-for="item in items" @click.stop="emit('goto', item.goto)">{{ item.text }}</div>
+    <div
+      class="item"
+      v-for="item in props.items"
+      @click.stop="emit('goto', item.goto)"
+    >{{ item.text }}</div>
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
 const emit = defineEmits(["goto"]);
-const items = ref([
-  { text: "选项1", goto: 0 },
-  { text: "选项2", goto: 0 },
-  { text: "选项3", goto: 0 },
-  { text: "选项4", goto: 0 },
-]);
+const props = defineProps({
+  items: { type: Object, default: [] },
+});
 </script>
 
 <style>

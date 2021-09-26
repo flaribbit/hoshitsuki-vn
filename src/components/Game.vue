@@ -12,7 +12,7 @@
     <Character name="038_00.png" s="0.8" x="600" />
     <div class="dialog-name" v-if="name">{{ name }}</div>
     <div class="dialog-box">{{ text }}</div>
-    <Choice @goto="onGoto" />
+    <Choice @goto="onGoto" :items="[]" />
   </div>
 </template>
 
@@ -38,7 +38,6 @@ const gameStyle = computed(() => {
   }
 });
 const onGoto = i => {
-  console.log(i);
   index.value = i;
   update();
 }
