@@ -3,7 +3,7 @@
     <h1>game</h1>
     <div
       class="background"
-      :style="`background: url(${background}) no-repeat center; background-size: cover;`"
+      :style="`background: url(backgrounds/${background}) no-repeat center; background-size: cover;`"
     >
       <p>command: {{ index }}, {{ commandlist[index] }}</p>
       <p>variables: {{ vars }}</p>
@@ -22,7 +22,7 @@ import Character from "./Character.vue";
 import Choice from "./Choice.vue";
 const name = ref("");
 const text = ref("");
-const background = ref("backgrounds/道02.png");
+const background = ref("");
 const index = ref(0);
 const commandlist = ref([]);
 const vars = reactive({});
@@ -93,6 +93,10 @@ const update = () => {
         continue;
       case "add":
         vars[command[1]] += command[2];
+        index.value++;
+        continue;
+      case "bg":
+        background.value = command[1];
         index.value++;
         continue;
       case "bgm":

@@ -1,4 +1,4 @@
-const commands = ["scene", "text", "label", "set", "add", "goto", "bgm", "select"];
+const commands = ["scene", "text", "label", "set", "add", "goto", "bg", "bgm", "select"];
 const regexFile = /\.story$/;
 const regexLine = /^(\w+) (.+)/;
 const regexGoto = /^(\S+) (if|unless) ([^<>=!]+) ?([<>=!]+) ?(.+)/;
@@ -16,6 +16,7 @@ function compileFileToJS(src) {
       labels[r[2]] = index;
     } else if (r && commands.indexOf(r[1]) != -1) {
       if (r[1] == "goto") {
+        //goto指令需要预处理条件
         var s = r[2];
         r = regexGoto.exec(s);
         if (r) {
@@ -24,6 +25,7 @@ function compileFileToJS(src) {
           cmds.push(["goto", s]);
         }
       } else if (r[1] == "set" || r[1] == "add") {
+        //set和get指令需要预处理变量值
         var s = r[1];
         r = regexSet.exec(r[2]);
         cmds.push([s, r[1], parseFloat(r[2])]);

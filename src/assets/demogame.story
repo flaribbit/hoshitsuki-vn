@@ -1,4 +1,5 @@
 scene morning
+bg 道02.png
 bgm 01.ogg
 set count 0
 label start
