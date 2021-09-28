@@ -1,4 +1,4 @@
-const commands = ["scene", "text", "label", "set", "add", "goto", "bg", "bgm", "select"];
+const commands = ["scene", "text", "label", "set", "add", "goto", "bg", "bgm", "choice"];
 const regexFile = /\.story$/;
 const regexLine = /^(\w+) (.+)/;
 const regexGoto = /^(\S+) (if|unless) ([^<>=!]+) ?([<>=!]+) ?(.+)/;
@@ -29,6 +29,14 @@ function compileFileToJS(src) {
         var s = r[1];
         r = regexSet.exec(r[2]);
         cmds.push([s, r[1], parseFloat(r[2])]);
+      } else if (r[1] == "choice") {
+        //编译选择项
+        var s = r[2].split(" ");
+        let choices = [];
+        for (let i = 0; i < s.length; i += 2) {
+          choices.push({ text: s[i], goto: s[i + 1] });
+        }
+        cmds.push([r[1], choices]);
       } else {
         cmds.push([r[1], r[2]]);
       }
@@ -38,9 +46,13 @@ function compileFileToJS(src) {
       index++;
     }
   }
-  for (var cmd of cmds) {
+  for (let cmd of cmds) {
     if (cmd[0] == "goto") {
       cmd[1] = labels[cmd[1]];
+    } else if (cmd[0] == "choice") {
+      for (let choice of cmd[1]) {
+        choice.goto = labels[choice.goto];
+      }
     }
   }
   console.log(cmds);

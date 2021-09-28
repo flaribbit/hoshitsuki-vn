@@ -1,5 +1,5 @@
 <template>
-  <div class="game" :style="gameStyle" @click="index++; update();">
+  <div class="game" :style="gameStyle" @click="onStep">
     <h1>game</h1>
     <div
       class="background"
@@ -12,7 +12,7 @@
     <Character name="038_00.png" s="0.8" x="600" />
     <div class="dialog-name" v-if="name">{{ name }}</div>
     <div class="dialog-box">{{ text }}</div>
-    <Choice @goto="onGoto" :items="[]" />
+    <Choice @goto="onChoice" :items="choices" />
   </div>
 </template>
 
@@ -25,6 +25,7 @@ const text = ref("");
 const background = ref("");
 const index = ref(0);
 const commandlist = ref([]);
+const choices = ref([]);
 const vars = reactive({});
 const windowSize = reactive({ w: window.innerWidth, h: window.innerHeight });
 const gameStyle = computed(() => {
@@ -37,8 +38,14 @@ const gameStyle = computed(() => {
     return `transform: translate(0, ${(windowSize.h - 720 * scale) / 2}px) scale(${scale})`;
   }
 });
-const onGoto = i => {
+const onStep = () => {
+  if (choices.value.length) return;
+  index.value++;
+  update();
+}
+const onChoice = i => {
   index.value = i;
+  choices.value = [];
   update();
 }
 const update = () => {
@@ -102,9 +109,9 @@ const update = () => {
       case "bgm":
         index.value++;
         continue;
-      case "bg":
-        index.value++;
-        continue;
+      case "choice":
+        choices.value = command[1];
+        return;
     }
   }
 }
