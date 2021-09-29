@@ -1,5 +1,5 @@
 <template>
-  <div class="game" :style="gameStyle" @click="onStep">
+  <div class="game" :style="gameStyle" @click="onStep" @wheel="onWheel">
     <h1>game</h1>
     <div
       class="background"
@@ -54,6 +54,9 @@ const onStep = () => {
   }
   index.value++;
   update();
+}
+const onWheel = event => {
+  if (event.deltaY > 0) onStep();
 }
 const onChoice = i => {
   index.value = i;
