@@ -1,10 +1,7 @@
 <template>
   <div class="game" :style="gameStyle" @click="onStep" @wheel="onWheel">
     <h1>game</h1>
-    <div
-      class="background"
-      :style="`background: url(backgrounds/${background}) no-repeat center; background-size: cover;`"
-    >
+    <div class="background" :style="backgroundStyle">
       <p>command: {{ index }}, {{ commandlist[index] }}</p>
       <p>variables: {{ vars }}</p>
     </div>
@@ -42,6 +39,13 @@ const gameStyle = computed(() => {
   } else {
     var scale = windowSize.w / 1280;
     return `transform: translate(0, ${(windowSize.h - 720 * scale) / 2}px) scale(${scale})`;
+  }
+});
+const backgroundStyle = computed(() => {
+  if (background.value) {
+    return `background: url(backgrounds/${background.value}) center / cover no-repeat`;
+  } else {
+    return "";
   }
 });
 const onStep = () => {
