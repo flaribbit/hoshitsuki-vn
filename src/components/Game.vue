@@ -28,6 +28,12 @@ const commandlist = ref([]);
 const choices = ref([]);
 const vars = reactive({});
 const windowSize = reactive({ w: window.innerWidth, h: window.innerHeight });
+const TEXT_INTERVAL = 50;
+const textAnimation = {
+  i: 0,
+  text: "",
+  timer: 0,
+};
 const gameStyle = computed(() => {
   var ratio = windowSize.w / windowSize.h;
   if (ratio > 16 / 9) {
@@ -40,6 +46,12 @@ const gameStyle = computed(() => {
 });
 const onStep = () => {
   if (choices.value.length) return;
+  if (textAnimation.timer) {
+    text.value = textAnimation.text;
+    clearInterval(textAnimation.timer);
+    textAnimation.timer = 0;
+    return;
+  }
   index.value++;
   update();
 }
@@ -47,6 +59,20 @@ const onChoice = i => {
   index.value = i;
   choices.value = [];
   update();
+}
+const setText = (name_, text_) => {
+  name.value = name_;
+  text.value = "";
+  textAnimation.i = 0;
+  textAnimation.text = text_;
+  textAnimation.timer = setInterval(() => {
+    textAnimation.i++;
+    if (textAnimation.i == textAnimation.text.length) {
+      clearInterval(textAnimation.timer);
+      textAnimation.timer = 0;
+    }
+    text.value = textAnimation.text.substring(0, textAnimation.i);
+  }, TEXT_INTERVAL);
 }
 const update = () => {
   console.log("update call", index.value);
@@ -58,11 +84,9 @@ const update = () => {
       case "text":
         var res = command[1].match(/(.+?): ?(.+)/);
         if (res) {
-          name.value = res[1];
-          text.value = res[2];
+          setText(res[1], res[2]);
         } else {
-          name.value = null;
-          text.value = command[1];
+          setText(null, command[1]);
         }
         return;
       case "scene"://TODO
