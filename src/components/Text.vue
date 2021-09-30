@@ -1,30 +1,21 @@
 <template>
   <div class="dialog-name" v-if="name">{{ name }}</div>
-  <div class="dialog-box">{{ displayText }}</div>
+  <div class="dialog-box">{{ text }}</div>
 </template>
 <script setup>
-import { computed, watch, reactive } from "vue";
+import { computed, ref, reactive } from "vue";
 const TEXT_INTERVAL = 50;
-const props = defineProps({
-  name: { type: String, default: "" },
-  text: { type: String, default: "" },
-})
-const displayText = computed(() => animation.text.substring(0, animation.i));
+const name = ref("");
+const text = computed(() => animation.text.substring(0, animation.i));
 const animation = reactive({
   i: 0,
   text: "",
   timer: 0,
 });
-const step = () => {
-  if (animation.timer) {
-    animation.i = animation.text.length;
-    return false;
-  }
-  return true;
-}
-watch(props, () => {
+const setText = (name_, text_) => {
+  name.value = name_;
   animation.i = 0;
-  animation.text = props.text;
+  animation.text = text_;
   animation.timer = setInterval(() => {
     if (animation.i >= animation.text.length) {
       clearInterval(animation.timer);
@@ -32,8 +23,15 @@ watch(props, () => {
     }
     animation.i++;
   }, TEXT_INTERVAL);
-});
-defineExpose({ step });
+};
+const step = () => {
+  if (animation.timer) {
+    animation.i = animation.text.length;
+    return false;
+  }
+  return true;
+}
+defineExpose({ setText, step });
 </script>
 
 <style>

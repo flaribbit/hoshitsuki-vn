@@ -7,7 +7,7 @@
     </div>
     <Character name="039_00.png" s="0.8" x="200" />
     <Character name="038_00.png" s="0.8" x="600" />
-    <Text ref="vText" :name="name" :text="text" />
+    <Text ref="vText" />
     <Choice @goto="onChoice" :items="choices" />
   </div>
 </template>
@@ -17,8 +17,6 @@ import { computed, onMounted, reactive, ref } from "vue";
 import Character from "./Character.vue";
 import Choice from "./Choice.vue";
 import Text from "./Text.vue";
-const name = ref("");
-const text = ref("");
 const vText = ref();
 const background = ref("");
 const index = ref(0);
@@ -68,11 +66,9 @@ const update = () => {
       case "text":
         var res = command[1].match(/(.+?): ?(.+)/);
         if (res) {
-          name.value = res[1];
-          text.value = res[2];
+          vText.value.setText(res[1], res[2]);
         } else {
-          name.value = null;
-          text.value = command[1];
+          vText.value.setText(null, command[1]);
         }
         return;
       case "scene"://TODO
