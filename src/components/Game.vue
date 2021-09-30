@@ -5,8 +5,8 @@
       <p>command: {{ index }}, {{ commandlist[index] }}</p>
       <p>variables: {{ vars }}</p>
     </div>
-    <Character name="039_00.png" s="0.8" x="200" />
-    <Character name="038_00.png" s="0.8" x="600" />
+    <Character name="039_00.png" :s="0.8" :x="200" />
+    <Character name="038_00.png" :s="0.8" :x="600" />
     <Text ref="vText" />
     <Choice @goto="onChoice" :items="choices" />
   </div>
