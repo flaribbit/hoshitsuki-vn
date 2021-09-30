@@ -3,19 +3,18 @@
   <div class="dialog-box">{{ displayText }}</div>
 </template>
 <script setup>
-import { computed, watch } from "vue";
+import { computed, watch, reactive } from "vue";
 const TEXT_INTERVAL = 50;
 const props = defineProps({
   name: { type: String, default: "" },
   text: { type: String, default: "" },
 })
-const emit = defineEmits(["next"]);
 const displayText = computed(() => animation.text.substring(0, animation.i));
-const animation = {
+const animation = reactive({
   i: 0,
   text: "",
   timer: 0,
-};
+});
 const step = () => {
   if (animation.timer) {
     animation.i = animation.text.length;

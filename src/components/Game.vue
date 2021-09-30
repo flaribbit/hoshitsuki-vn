@@ -7,7 +7,7 @@
     </div>
     <Character name="039_00.png" s="0.8" x="200" />
     <Character name="038_00.png" s="0.8" x="600" />
-    <Text ref="vText" />
+    <Text ref="vText" :name="name" :text="text" />
     <Choice @goto="onChoice" :items="choices" />
   </div>
 </template>
@@ -19,18 +19,13 @@ import Choice from "./Choice.vue";
 import Text from "./Text.vue";
 const name = ref("");
 const text = ref("");
+const vText = ref();
 const background = ref("");
 const index = ref(0);
 const commandlist = ref([]);
 const choices = ref([]);
 const vars = reactive({});
 const windowSize = reactive({ w: window.innerWidth, h: window.innerHeight });
-const TEXT_INTERVAL = 50;
-const textAnimation = {
-  i: 0,
-  text: "",
-  timer: 0,
-};
 const gameStyle = computed(() => {
   var ratio = windowSize.w / windowSize.h;
   if (ratio > 16 / 9) {
@@ -50,9 +45,10 @@ const backgroundStyle = computed(() => {
 });
 const onStep = () => {
   if (choices.value.length) return;
-  if ()
+  if (vText.value.step()) {
     index.value++;
-  update();
+    update();
+  }
 }
 const onWheel = event => {
   if (event.deltaY > 0) onStep();
@@ -72,9 +68,11 @@ const update = () => {
       case "text":
         var res = command[1].match(/(.+?): ?(.+)/);
         if (res) {
-          setText(res[1], res[2]);
+          name.value = res[1];
+          text.value = res[2];
         } else {
-          setText(null, command[1]);
+          name.value = null;
+          text.value = command[1];
         }
         return;
       case "scene"://TODO
