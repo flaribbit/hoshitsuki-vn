@@ -7,8 +7,7 @@
     </div>
     <Character name="039_00.png" s="0.8" x="200" />
     <Character name="038_00.png" s="0.8" x="600" />
-    <div class="dialog-name" v-if="name">{{ name }}</div>
-    <div class="dialog-box">{{ text }}</div>
+    <Text ref="vText" />
     <Choice @goto="onChoice" :items="choices" />
   </div>
 </template>
@@ -17,6 +16,7 @@
 import { computed, onMounted, reactive, ref } from "vue";
 import Character from "./Character.vue";
 import Choice from "./Choice.vue";
+import Text from "./Text.vue";
 const name = ref("");
 const text = ref("");
 const background = ref("");
@@ -50,13 +50,8 @@ const backgroundStyle = computed(() => {
 });
 const onStep = () => {
   if (choices.value.length) return;
-  if (textAnimation.timer) {
-    text.value = textAnimation.text;
-    clearInterval(textAnimation.timer);
-    textAnimation.timer = 0;
-    return;
-  }
-  index.value++;
+  if ()
+    index.value++;
   update();
 }
 const onWheel = event => {
@@ -66,20 +61,6 @@ const onChoice = i => {
   index.value = i;
   choices.value = [];
   update();
-}
-const setText = (name_, text_) => {
-  name.value = name_;
-  text.value = "";
-  textAnimation.i = 0;
-  textAnimation.text = text_;
-  textAnimation.timer = setInterval(() => {
-    textAnimation.i++;
-    if (textAnimation.i == textAnimation.text.length) {
-      clearInterval(textAnimation.timer);
-      textAnimation.timer = 0;
-    }
-    text.value = textAnimation.text.substring(0, textAnimation.i);
-  }, TEXT_INTERVAL);
 }
 const update = () => {
   console.log("update call", index.value);
@@ -176,26 +157,5 @@ onMounted(() => {
   left: 0;
   width: 100%;
   height: 100%;
-}
-.dialog-name {
-  position: absolute;
-  left: 100px;
-  bottom: 180px;
-  min-width: 100px;
-  padding: 10px 20px;
-  border: 4px solid var(--c-line);
-  background: var(--c-background);
-  border-radius: 10px;
-}
-.dialog-box {
-  position: absolute;
-  left: 100px;
-  bottom: 20px;
-  top: 540px;
-  right: 100px;
-  padding: 20px;
-  border: 4px solid var(--c-line);
-  background: var(--c-background);
-  border-radius: 10px;
 }
 </style>
