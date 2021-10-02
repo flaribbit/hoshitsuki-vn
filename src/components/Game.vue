@@ -61,15 +61,9 @@ const update = () => {
   while (true) {
     var command = commandlist.value[index.value];
     if (!command) return;
-    console.log(index.value, command);
     switch (command[0]) {
       case "text":
-        var res = command[1].match(/(.+?): ?(.+)/);
-        if (res) {
-          vText.value.setText(res[1], res[2]);
-        } else {
-          vText.value.setText(null, command[1]);
-        }
+        vText.value.setText(command[1].n, command[1].t);
         return;
       case "scene"://TODO
         index.value++;

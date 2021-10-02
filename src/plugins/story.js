@@ -1,6 +1,7 @@
 const commands = ["scene", "text", "label", "set", "add", "goto", "bg", "bgm", "choice"];
 const regexFile = /\.story$/;
 const regexLine = /^(\w+) (.+)/;
+const regexText = /(.+?): ?(.+)/;
 const regexGoto = /^(\S+) (if|unless) ([^<>=!]+) ?([<>=!]+) ?(.+)/;
 const regexSet = /^(\S+) (.+)/;
 
@@ -12,39 +13,47 @@ function compileFileToJS(src) {
   for (var line of lines) {
     if (line == "") continue;
     var r = regexLine.exec(line);
-    if (r && r[1] == "label") {
-      labels[r[2]] = index;
-    } else if (r && commands.indexOf(r[1]) != -1) {
-      if (r[1] == "goto") {
-        //goto指令需要预处理条件
-        var s = r[2];
-        r = regexGoto.exec(s);
-        if (r) {
-          cmds.push(["goto", r[1], r[2], r[3], r[4], parseFloat(r[5])]);
-        } else {
-          cmds.push(["goto", s]);
-        }
-      } else if (r[1] == "set" || r[1] == "add") {
-        //set和get指令需要预处理变量值
-        var s = r[1];
-        r = regexSet.exec(r[2]);
-        cmds.push([s, r[1], parseFloat(r[2])]);
-      } else if (r[1] == "choice") {
-        //编译选择项
-        var s = r[2].split(" ");
-        let choices = [];
-        for (let i = 0; i < s.length; i += 2) {
-          choices.push({ text: s[i], goto: s[i + 1] });
-        }
-        cmds.push([r[1], choices]);
-      } else {
-        cmds.push([r[1], r[2]]);
-      }
-      index++;
-    } else {
-      cmds.push(["text", line]); //省略指令时默认text
-      index++;
+    if (!r || commands.indexOf(r[1]) == -1) {
+      r = [line, "text", line]; //便于统一处理
     }
+    if (r[1] == "label") {
+      labels[r[2]] = index;
+      continue;
+    }
+    if (r[1] == "goto") {
+      //goto指令需要预处理条件
+      var s = r[2];
+      r = regexGoto.exec(s);
+      if (r) {
+        cmds.push(["goto", r[1], r[2], r[3], r[4], parseFloat(r[5])]);
+      } else {
+        cmds.push(["goto", s]);
+      }
+    } else if (r[1] == "text") {
+      var s = r[2];
+      r = regexText.exec(r[2]);
+      if (r) {
+        cmds.push(["text", { n: r[1], t: r[2] }]);
+      } else {
+        cmds.push(["text", { n: null, t: s }]);
+      }
+    } else if (r[1] == "set" || r[1] == "add") {
+      //set和get指令需要预处理变量值
+      var s = r[1];
+      r = regexSet.exec(r[2]);
+      cmds.push([s, r[1], parseFloat(r[2])]);
+    } else if (r[1] == "choice") {
+      //编译选择项
+      var s = r[2].split(" ");
+      let choices = [];
+      for (let i = 0; i < s.length; i += 2) {
+        choices.push({ text: s[i], goto: s[i + 1] });
+      }
+      cmds.push([r[1], choices]);
+    } else {
+      cmds.push([r[1], r[2]]);
+    }
+    index++;
   }
   for (let cmd of cmds) {
     if (cmd[0] == "goto") {
