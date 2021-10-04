@@ -10,6 +10,7 @@
     <Text ref="vText" />
     <Choice @goto="onChoice" :items="choices" />
   </div>
+  <div class="fullscreen" @click="onFullscreen">FULLSCREEN</div>
 </template>
 
 <script setup>
@@ -41,6 +42,10 @@ const backgroundStyle = computed(() => {
     return "";
   }
 });
+const onFullscreen = () => {
+  document.body.requestFullscreen();
+  window.screen.orientation.lock("landscape");
+}
 const onStep = () => {
   if (choices.value.length) return;
   if (vText.value.step()) {
@@ -145,5 +150,11 @@ onMounted(() => {
   left: 0;
   width: 100%;
   height: 100%;
+}
+.fullscreen {
+  position: absolute;
+  color: red;
+  top: 20px;
+  right: 20px;
 }
 </style>
