@@ -11,17 +11,16 @@ function compileFileToJS(src) {
   var labels = {};
   var index = 0;
   for (var line of lines) {
-    if (line == "") continue;
+    if (line == "") continue; //skip empty lines
     var r = regexLine.exec(line);
     if (!r || commands.indexOf(r[1]) == -1) {
-      r = [line, "text", line]; //便于统一处理
+      r = [line, "text", line]; //fallback to text if there is no command
     }
-    if (r[1] == "label") {
+    if (r[1] == "label") { //save labels
       labels[r[2]] = index;
       continue;
     }
-    if (r[1] == "goto") {
-      //goto指令需要预处理条件
+    if (r[1] == "goto") { //preprocess goto command
       var s = r[2];
       r = regexGoto.exec(s);
       if (r) {
@@ -29,24 +28,22 @@ function compileFileToJS(src) {
       } else {
         cmds.push(["goto", s]);
       }
-    } else if (r[1] == "text") {
+    } else if (r[1] == "text") { //preprocess text command
       var s = r[2];
       r = regexText.exec(r[2]);
       if (r) {
-        cmds.push(["text", { n: r[1], t: r[2] }]);
+        cmds.push(["text", { n: r[1], t: r[2] }]); //n = name, t = text
       } else {
         cmds.push(["text", { n: null, t: s }]);
       }
-    } else if (r[1] == "set" || r[1] == "add") {
-      //set和get指令需要预处理变量值
+    } else if (r[1] == "set" || r[1] == "add") { //preprocess set/add command
       var s = r[1];
       r = regexSet.exec(r[2]);
       cmds.push([s, r[1], parseFloat(r[2])]);
-    } else if (r[1] == "actor") {
+    } else if (r[1] == "actor") { //preprocess actor command
       var s = r[2].split(" ");
       cmds.push(["actor", s]);
-    } else if (r[1] == "choice") {
-      //编译选择项
+    } else if (r[1] == "choice") { //preprocess choice command
       var s = r[2].split(" ");
       let choices = [];
       for (let i = 0; i < s.length; i += 2) {
@@ -58,6 +55,7 @@ function compileFileToJS(src) {
     }
     index++;
   }
+  //replace labels with line index
   for (let cmd of cmds) {
     if (cmd[0] == "goto") {
       cmd[1] = labels[cmd[1]];
@@ -67,7 +65,7 @@ function compileFileToJS(src) {
       }
     }
   }
-  console.log(cmds);
+  console.log(cmds); //debug output
   return "export default " + JSON.stringify(cmds);
 }
 
