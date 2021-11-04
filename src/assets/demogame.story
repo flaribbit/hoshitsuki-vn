@@ -3,6 +3,9 @@ bg 道02.png
 bgm 01.ogg
 set count 0
 label start
+
+actor Cirno Daiyousei
+
 text Cirno: Good morning!
 Daiyousei: Good morning!
 

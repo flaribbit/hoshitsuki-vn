@@ -1,4 +1,4 @@
-const commands = ["scene", "text", "label", "set", "add", "goto", "bg", "bgm", "choice"];
+const commands = ["scene", "text", "label", "set", "add", "goto", "bg", "bgm", "choice", "actor"];
 const regexFile = /\.story$/;
 const regexLine = /^(\w+) (.+)/;
 const regexText = /(.+?): ?(.+)/;
@@ -42,6 +42,9 @@ function compileFileToJS(src) {
       var s = r[1];
       r = regexSet.exec(r[2]);
       cmds.push([s, r[1], parseFloat(r[2])]);
+    } else if (r[1] == "actor") {
+      var s = r[2].split(" ");
+      cmds.push(["actor", s]);
     } else if (r[1] == "choice") {
       //编译选择项
       var s = r[2].split(" ");
