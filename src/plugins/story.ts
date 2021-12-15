@@ -5,23 +5,24 @@ const regexText = /(.+?): ?(.+)/;
 const regexGoto = /^(\S+) (if|unless) ([^<>=!]+) ?([<>=!]+) ?(.+)/;
 const regexSet = /^(\S+) (.+)/;
 
-function compileFileToJS(src) {
-  var lines = src.split(/\r?\n/);
-  var cmds = [];
-  var labels = {};
-  var index = 0;
-  for (var line of lines) {
+function compileFileToJS(src: string) {
+  const lines: string[] = src.split(/\r?\n/);
+  const cmds = [];
+  const labels: { [label: string]: number } = {};
+  let index = 0;
+  for (let line of lines) {
     if (line == "") continue; //skip empty lines
-    var r = regexLine.exec(line);
+    let r = regexLine.exec(line);
     if (!r || commands.indexOf(r[1]) == -1) {
-      r = [line, "text", line]; //fallback to text if there is no command
+      //fallback to text if there is no command
+      r = regexText.exec("text " + line);
     }
     if (r[1] == "label") { //save labels
       labels[r[2]] = index;
       continue;
     }
     if (r[1] == "goto") { //preprocess goto command
-      var s = r[2];
+      const s = r[2];
       r = regexGoto.exec(s);
       if (r) {
         cmds.push(["goto", r[1], r[2], r[3], r[4], parseFloat(r[5])]);
@@ -29,7 +30,7 @@ function compileFileToJS(src) {
         cmds.push(["goto", s]);
       }
     } else if (r[1] == "text") { //preprocess text command
-      var s = r[2];
+      const s = r[2];
       r = regexText.exec(r[2]);
       if (r) {
         cmds.push(["text", { n: r[1], t: r[2] }]); //n = name, t = text
@@ -37,14 +38,14 @@ function compileFileToJS(src) {
         cmds.push(["text", { n: null, t: s }]);
       }
     } else if (r[1] == "set" || r[1] == "add") { //preprocess set/add command
-      var s = r[1];
+      const s = r[1];
       r = regexSet.exec(r[2]);
       cmds.push([s, r[1], parseFloat(r[2])]);
     } else if (r[1] == "actor") { //preprocess actor command
-      var s = r[2].split(" ");
+      const s = r[2].split(" ");
       cmds.push(["actor", s]);
     } else if (r[1] == "choice") { //preprocess choice command
-      var s = r[2].split(" ");
+      const s = r[2].split(" ");
       let choices = [];
       for (let i = 0; i < s.length; i += 2) {
         choices.push({ text: s[i], goto: s[i + 1] });
@@ -72,7 +73,7 @@ function compileFileToJS(src) {
 export default function story() {
   return {
     name: "story",
-    transform(src, id) {
+    transform(src: string, id: string) {
       if (regexFile.test(id)) {
         return {
           code: compileFileToJS(src),

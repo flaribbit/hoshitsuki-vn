@@ -2,7 +2,7 @@
   <div class="character" :style="style"></div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { reactive, computed } from "vue";
 const props = defineProps({
   x: { type: Number, default: 450 },
@@ -18,10 +18,10 @@ const style = computed(() => {
   if (!props.name) return {};
   var url = "characters/" + props.name;
   var img = new Image();
-  img.onload = function () {
-    data.w = this.width;
-    data.h = this.height;
-  };
+  img.onload = () => {
+    data.w = img.width;
+    data.h = img.height;
+  }
   img.src = url;
   return {
     left: props.x + "px",

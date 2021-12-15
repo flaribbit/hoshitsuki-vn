@@ -2,7 +2,7 @@
   <div class="dialog-name" v-if="name">{{ name }}</div>
   <div class="dialog-box">{{ text }}</div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { computed, ref, reactive } from "vue";
 const TEXT_INTERVAL = 50;
 const name = ref("");
@@ -12,10 +12,10 @@ const animation = reactive({
   text: "",
   timer: 0,
 });
-const setText = (name_, text_) => {
-  name.value = name_;
+const setText = (sname: string, stext: string) => {
+  name.value = sname;
   animation.i = 0;
-  animation.text = text_;
+  animation.text = stext;
   animation.timer = setInterval(() => {
     if (animation.i >= animation.text.length) {
       clearInterval(animation.timer);

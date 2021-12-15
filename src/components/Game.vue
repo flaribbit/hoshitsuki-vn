@@ -12,7 +12,7 @@
   <div class="fullscreen" @click="onFullscreen">FULLSCREEN</div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue";
 import Actor from "./Actor.vue";
 import Choice from "./Choice.vue";
@@ -54,11 +54,11 @@ const onStep = () => {
     update();
   }
 }
-const onWheel = event => {
+const onWheel = (event: WheelEvent) => {
   if (event.deltaY > 0) onStep();
 }
-const onChoice = i => {
-  index.value = i;
+const onChoice = (goto: number) => {
+  index.value = goto;
   choices.value = [];
   update();
 }
@@ -78,7 +78,7 @@ const update = () => {
         if (command.length == 6) {
           let v1 = vars[command[3]];
           let v2 = command[5];
-          let result;
+          let result: boolean;
           switch (command[4]) {
             case "<": result = v1 < v2; break;
             case ">": result = v1 > v2; break;
