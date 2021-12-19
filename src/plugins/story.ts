@@ -15,7 +15,7 @@ function compileFileToJS(src: string) {
     let r = regexLine.exec(line);
     if (!r || commands.indexOf(r[1]) == -1) {
       //fallback to text if there is no command
-      r = regexText.exec("text " + line);
+      r = regexLine.exec("text " + line);
     }
     if (r[1] == "label") { //save labels
       labels[r[2]] = index;
