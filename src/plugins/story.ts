@@ -14,7 +14,7 @@ function compileFileToJS(src: string) {
   for (let line of lines) {
     if (line == "") continue; //skip empty lines
     let r = regexLine.exec(line);
-    if (!r || commands.indexOf(r[1]) == -1) {
+    if (!r || !commands.includes(r[1])) {
       //fallback to text if there is no command
       r = regexLine.exec("text " + line);
     }
