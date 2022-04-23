@@ -5,7 +5,7 @@
       <p>command: {{ index }}, {{ commandlist[index] }}</p>
       <p>variables: {{ vars }}</p>
     </div>
-    <Actor v-for="actor in actors" :key="actor.name" :name="actor.name" :s="actor.s" :x="actor.x" />
+    <Actor v-for="actor in actors" :key="actor.name" :name="actor.name" :image="actor.image" :s="actor.s" :x="actor.x" />
     <Text ref="vText" />
     <Choice @goto="onChoice" :items="choices" />
   </div>
@@ -120,7 +120,8 @@ const update = () => {
         //calculate actor position
         for (var i = 0; i < command[1].length; i++) {
           actors.value.push({
-            name: command[1][i] + "_00.png", //TODO
+            name: command[1][i],
+            image: command[1][i] + "_00.png",
             s: 0.8,
             x: 1280 / command[1].length * (i + 0.5) - 240,
           });
@@ -156,6 +157,7 @@ onMounted(() => {
   --c-line: #f6bd60;
   --c-background: #f7ede2;
 }
+
 .background {
   position: absolute;
   image-rendering: pixelated;
@@ -164,6 +166,7 @@ onMounted(() => {
   width: 100%;
   height: 100%;
 }
+
 .fullscreen {
   position: absolute;
   color: red;

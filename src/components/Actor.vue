@@ -4,8 +4,8 @@
 
 <script setup lang="ts">
 import { reactive, computed } from 'vue'
-const { x = 450, y = 200, s = 1, name = '' } = defineProps<{
-  x: number, y: number, s: number, name: string
+const { x = 450, y = 200, s = 1, name, image } = defineProps<{
+  x?: number, y?: number, s?: number, name: string, image: string,
 }>();
 const data = reactive({
   w: 0,
@@ -13,7 +13,7 @@ const data = reactive({
 })
 const style = computed(() => {
   if (!name) return {};
-  var url = 'characters/' + name;
+  var url = 'characters/' + image;
   var img = new Image();
   img.onload = () => {
     data.w = img.width;
