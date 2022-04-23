@@ -3,20 +3,17 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, computed } from "vue";
-const props = defineProps({
-  x: { type: Number, default: 450 },
-  y: { type: Number, default: 200 },
-  s: { type: Number, default: 1 },
-  name: { type: String, default: null },
-});
+import { reactive, computed } from 'vue'
+const { x = 450, y = 200, s = 1, name = '' } = defineProps<{
+  x: number, y: number, s: number, name: string
+}>();
 const data = reactive({
   w: 0,
   h: 0,
 })
 const style = computed(() => {
-  if (!props.name) return {};
-  var url = "characters/" + props.name;
+  if (!name) return {};
+  var url = 'characters/' + name;
   var img = new Image();
   img.onload = () => {
     data.w = img.width;
@@ -24,11 +21,11 @@ const style = computed(() => {
   }
   img.src = url;
   return {
-    left: props.x + "px",
-    top: props.y + "px",
-    width: data.w + "px",
-    height: data.h + "px",
-    transform: `scale(${props.s})`,
+    left: x + 'px',
+    top: y + 'px',
+    width: data.w + 'px',
+    height: data.h + 'px',
+    transform: `scale(${s})`,
     background: `url(${url})`,
   };
 });
